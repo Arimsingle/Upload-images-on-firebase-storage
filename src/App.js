@@ -3,11 +3,8 @@ import { storage } from "./firebase/firebase.js";
 
 function App() {
   const [file, setFile] = useState(null);
-  // const [url, setURL] = useState("");
-  // const [name, setName] = useState([]);
   const [img, setImg] = useState([]);
 
-  // const [urlImage, setUrlImage] = useState([]);
   useEffect(() => {
     getImageFirebase();
   }, [file]);
@@ -23,9 +20,8 @@ function App() {
         .ref("images")
         .child(file.name)
         .getDownloadURL()
-        .then((url) => {
+        .then(() => {
           setFile(null);
-          // setURL(url);
         });
     });
   }
@@ -51,7 +47,6 @@ function App() {
         });
       });
   };
-  console.log(img);
   return (
     <div>
       <form onSubmit={handleUpload}>
@@ -59,21 +54,22 @@ function App() {
         <button disabled={!file}>upload to firebase</button>
       </form>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {img &&
-          img.map((ImgUrl, index) => {
-            return (
-              <div key={index}>
-                <p style={{ textAlign: "center" }}>
-                  {ImgUrl.name.slice(0, ImgUrl.name.length - 4)}
-                </p>
-                <img
-                  src={ImgUrl.url}
-                  alt=""
-                  style={{ width: "300px", height: "300px" }}
-                />
-              </div>
-            );
-          })}
+        {img.length > 0
+          ? img.map((ImgUrl, index) => {
+              return (
+                <div key={index}>
+                  <p style={{ textAlign: "center" }}>
+                    {ImgUrl.name.slice(0, ImgUrl.name.length - 4)}
+                  </p>
+                  <img
+                    src={ImgUrl.url}
+                    alt=""
+                    style={{ width: "300px", height: "300px" }}
+                  />
+                </div>
+              );
+            })
+          : "No image"}
       </div>
     </div>
   );
